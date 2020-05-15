@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="insert_movie_tmp">
+    <start to="hive2_1"/>
+    <action name="hive2_1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
+            <job-tracker>${resourceManager}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <jdbc-url>${jdbcUrl}</jdbc-url>
+            <password>${password}</password>
+            <script>${hiveSql}</script>
+            <param>category=${movieCategory}</param>
+        </hive2>
+        <ok to="end"/>
+        <error to="kill"/>
+    </action>
+    <kill name="kill">
+        <message>${wf:errorMessage(wf:lastErrorNode())}</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
